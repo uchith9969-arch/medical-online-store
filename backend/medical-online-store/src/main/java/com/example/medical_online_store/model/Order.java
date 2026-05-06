@@ -15,7 +15,15 @@ public class Order {
 
     private Double totalAmount;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+
+    private enum OrderStatus {
+        PENDING,
+        PAID,
+        CANCELLED,
+        DELIVERED
+    }
 
     // e.g. PENDING, CONFIRMED, CANCELLED
 
