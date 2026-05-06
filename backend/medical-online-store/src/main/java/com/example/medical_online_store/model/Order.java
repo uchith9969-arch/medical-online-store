@@ -2,6 +2,8 @@ package com.example.medical_online_store.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 @Entity
 @Table(name = "orders")
@@ -18,21 +20,13 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    private enum OrderStatus {
-        PENDING,
-        PAID,
-        CANCELLED,
-        DELIVERED
-    }
-
     // e.g. PENDING, CONFIRMED, CANCELLED
-
     private LocalDateTime orderDate;
 
     // Constructors
     public Order() {
         this.orderDate = LocalDateTime.now();
-        this.status = "PENDING";
+        this.status = OrderStatus.PENDING;
 
     }
 
@@ -40,7 +34,7 @@ public class Order {
         this.userId = userId;
         this.totalAmount = totalAmount;
         this.orderDate = LocalDateTime.now();
-        this.status = "PENDING";
+        this.status = OrderStatus.PENDING;
     }
 
     // Setters
@@ -53,7 +47,7 @@ public class Order {
         this.totalAmount = totalAmount;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 
@@ -70,7 +64,7 @@ public class Order {
         return totalAmount;
     }
 
-    public String getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 

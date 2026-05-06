@@ -4,6 +4,7 @@ import com.example.medical_online_store.model.Order;
 import com.example.medical_online_store.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.example.medical_online_store.model.OrderStatus;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class OrderService {
 
     // Creating the Order
     public Order creatOrder(Order order) {
+        order.setStatus(OrderStatus.PENDING);
         return orderRepository.save(order);
     }
 
@@ -29,13 +31,12 @@ public class OrderService {
     }
 
     // Update order status
-    public Order updateOrderStatus(Long id, String status) {
-        Order order = orderRepository.findById(id).orElse(null);
-        if (order != null) {
-            order.setStatus(status);
-            return orderRepository.save(order);
-        }
-        return null;
+    public Order updateOrderStatus(Long id, OrderStatus status) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+
+        order.setStatus(status);
+        return orderRepository.save(order);
+
     }
 
     // Delete order

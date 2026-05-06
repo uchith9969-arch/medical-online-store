@@ -1,11 +1,13 @@
 package com.example.medical_online_store.controller;
 
 import com.example.medical_online_store.model.Order;
+import com.example.medical_online_store.model.OrderStatus;
 import com.example.medical_online_store.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -17,7 +19,7 @@ public class OrderController {
 
     // Creating the order
     @PostMapping
-    public Order creaOrder(@RequestBody Order order) {
+    public Order createOrder(@RequestBody Order order) {
         return orderService.creatOrder(order);
     }
 
@@ -35,8 +37,13 @@ public class OrderController {
 
     // Update order status
     @PutMapping("/{id}/status")
-    public Order updateStatus(@PathVariable Long id, @RequestParam String status) {
-        return orderService.updateOrderStatus(id, status);
+    public Order updateStatus(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        try {
+            OrderStatus status = OrderStatus.valueOf(body.get("status").toUpperCase());
+            return orderService.updateOrderStatus(id, status);
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid status provided");
+        }
     }
 
     // Delete order
