@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.medical_online_store.model.OrderStatus;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -36,6 +37,16 @@ public class OrderService {
         return orderRepository.findByUserId(userId);
     }
 
+    // Get order by status
+    public List<Order> getOrdersByStatus(OrderStatus status) {
+        return orderRepository.findByStatus(status);
+    }
+
+    // Get orders between dates
+    public List<Order> getOrdersBetweenDates(LocalDateTime start, LocalDateTime end) {
+        return orderRepository.findByOrderDateBetween(start, end);
+    }
+
     // Update order status
     public Order updateOrderStatus(Long id, OrderStatus status) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
@@ -43,6 +54,20 @@ public class OrderService {
         order.setStatus(status);
         return orderRepository.save(order);
 
+    }
+
+    // Cancel the Order
+    public Order cancelOrder(Long id) {
+
+        Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+
+        // Prevent canceling a delivered Order
+        if (order.getStatus() == OrderStatus.DELIVERED) {
+            throw new RuntimeException("Delivered orders cannot be cancelled");
+        }
+
+        order.setStatus(OrderStatus.CANCELLED);
+        return orderRepository.save(order);
     }
 
     // Delete order

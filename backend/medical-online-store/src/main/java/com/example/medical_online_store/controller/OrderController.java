@@ -10,6 +10,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -37,6 +39,34 @@ public class OrderController {
         return orderService.getOrderByUser(userId);
     }
 
+    // Get order by status
+    @GetMapping("/status/{status}")
+    public List<Order> getOrderByStatus(@PathVariable String status) {
+
+        OrderStatus orderStatus;
+        try {
+            orderStatus = OrderStatus.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid order status: " + status);
+        }
+        return orderService.getOrdersByStatus(orderStatus);
+    }
+
+    // Get Orders between dates
+    @GetMapping("/date-range")
+    public List<Order> getOrdersBetweenDates(
+
+            @RequestParam String start,
+            @RequestParam String end) {
+
+        LocalDateTime startDate = LocalDate.parse(start).atStartOfDay();
+
+        LocalDateTime endDate = LocalDate.parse(end).atTime(23, 59, 59);
+
+        return orderService.getOrdersBetweenDates(startDate, endDate);
+
+    }
+
     // Update order status
     @PutMapping("/{id}/status")
     public Order updateStatus(@PathVariable Long id, @RequestBody Map<String, String> body) {
@@ -56,6 +86,12 @@ public class OrderController {
 
         }
         return orderService.updateOrderStatus(id, status);
+    }
+
+    // Cancelling an order
+    @PutMapping("/{id}/cancel")
+    public Order cancelOrder(@PathVariable Long id) {
+        return orderService.cancelOrder(id);
     }
 
     // Delete order
