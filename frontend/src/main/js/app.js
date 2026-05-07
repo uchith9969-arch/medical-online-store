@@ -1,6 +1,8 @@
-const payBtn = document.getElementById("payBtn");
+
 const popup = document.getElementById("paymentPopup");
 const closePopup = document.getElementById("closePopup");
+
+const payButtons = document.querySelectorAll(".pay-btn");
 
 const cashBtn = document.getElementById("cashBtn");
 const cardBtn = document.getElementById("cardBtn");
@@ -8,31 +10,52 @@ const cardBtn = document.getElementById("cardBtn");
 const cardForm = document.getElementById("cardForm");
 const message = document.getElementById("message");
 
-// Open popup
-payBtn.addEventListener("click", () => {
-  popup.style.display = "flex";
+// OPEN POPUP
+
+payButtons.forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    popup.style.display = "flex";
+
+  });
+
 });
 
-// Close popup
+// CLOSE POPUP
+
 closePopup.addEventListener("click", () => {
+
   popup.style.display = "none";
-  resetForm();
+
+  resetPopup();
+
 });
 
-// Cash payment
+// CASH PAYMENT
+
 cashBtn.addEventListener("click", () => {
-  message.innerHTML = "Cash Payment Successful ✅";
+
   cardForm.classList.add("hidden");
+
+  message.innerHTML = "Cash Payment Completed ✅";
+
 });
 
-// Show card form
+// SHOW CARD FORM
+
 cardBtn.addEventListener("click", () => {
+
   cardForm.classList.remove("hidden");
+
   message.innerHTML = "";
+
 });
 
-// Process card payment
+// CARD PAYMENT
+
 cardForm.addEventListener("submit", (e) => {
+
   e.preventDefault();
 
   message.innerHTML = "Card Payment Successful ✅";
@@ -40,13 +63,21 @@ cardForm.addEventListener("submit", (e) => {
   cardForm.reset();
 
   setTimeout(() => {
+
     popup.style.display = "none";
-    resetForm();
+
+    resetPopup();
+
   }, 2000);
+
 });
 
-// Reset
-function resetForm(){
+// RESET
+
+function resetPopup(){
+
   cardForm.classList.add("hidden");
+
   message.innerHTML = "";
+
 }
