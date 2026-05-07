@@ -15,7 +15,13 @@ public class OrderService {
     private OrderRepository orderRepository;
 
     // Creating the Order
-    public Order creatOrder(Order order) {
+    public Order createOrder(Order order) {
+        if (order.getUserId() == null) {
+            throw new RuntimeException("User ID is required");
+        }
+        if (order.getTotalAmount() == null) {
+            throw new RuntimeException("Total amount cannot be null");
+        }
         order.setStatus(OrderStatus.PENDING);
         return orderRepository.save(order);
     }
@@ -26,8 +32,8 @@ public class OrderService {
     }
 
     // Get order by ID
-    public Order getOrderById(Long id) {
-        return orderRepository.findById(id).orElse(null);
+    public List<Order> getOrderByUser(Long userId) {
+        return orderRepository.findByUserId(userId);
     }
 
     // Update order status

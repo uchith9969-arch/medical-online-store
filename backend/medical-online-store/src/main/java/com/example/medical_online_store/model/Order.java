@@ -20,7 +20,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    // e.g. PENDING, CONFIRMED, CANCELLED
+    // e.g. PENDING, PAID, CANCELLED, DELIVERED
     private LocalDateTime orderDate;
 
     // Constructors
