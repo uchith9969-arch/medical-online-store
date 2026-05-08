@@ -5,6 +5,7 @@ import com.example.medical_online_store.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.medical_online_store.model.OrderStatus;
+import com.example.medical_online_store.exception.OrderNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,8 +21,8 @@ public class OrderService {
         if (order.getUserId() == null) {
             throw new RuntimeException("User ID is required");
         }
-        if (order.getTotalAmount() == null) {
-            throw new RuntimeException("Total amount cannot be null");
+        if (order.getTotalAmount() == null || order.getTotalAmount() <= 0) {
+            throw new RuntimeException("Total amount must be greater than 0");
         }
         order.setStatus(OrderStatus.PENDING);
         return orderRepository.save(order);
@@ -32,7 +33,14 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
-    // Get order by ID
+    // Get Order by ID
+    public Order getOrderById(Long id) {
+
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + id));
+    }
+
+    // Get order by User ID
     public List<Order> getOrderByUser(Long userId) {
         return orderRepository.findByUserId(userId);
     }
@@ -49,7 +57,8 @@ public class OrderService {
 
     // Update order status
     public Order updateOrderStatus(Long id, OrderStatus status) {
-        Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException("Order not found with ID: " + id));
 
         order.setStatus(status);
         return orderRepository.save(order);
