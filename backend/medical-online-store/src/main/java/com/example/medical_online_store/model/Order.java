@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import java.util.List;
+import java.util.ArrayList;
+
 
 @Entity
 @Table(name = "orders")
@@ -22,6 +25,10 @@ public class Order {
 
     // e.g. PENDING, PAID, CANCELLED, DELIVERED
     private LocalDateTime orderDate;
+
+    // One-to-Many: Each order has many items
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> items = new ArrayList<>();
 
     // Constructors
     public Order() {
@@ -51,6 +58,14 @@ public class Order {
         this.status = status;
     }
 
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
+    }
+
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
+    }
+
     // Getters
     public Long getId() {
         return id;
@@ -70,5 +85,9 @@ public class Order {
 
     public LocalDateTime getOrderDate() {
         return orderDate;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
     }
 }
