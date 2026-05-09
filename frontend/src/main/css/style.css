@@ -1,0 +1,114 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background: linear-gradient(to right,#021024,#052659,#021024);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    padding:40px;
+}
+
+/* MAIN BOX */
+
+.container{
+    width:500px;
+    background:rgba(255,255,255,0.05);
+    padding:35px;
+    border-radius:25px;
+    backdrop-filter: blur(10px);
+    border:1px solid rgba(255,255,255,0.1);
+    box-shadow:0 0 25px rgba(0,0,0,0.3);
+}
+
+/* TITLES */
+
+h1{
+    text-align:center;
+    margin-bottom:25px;
+    color:#19e6b3;
+    font-size:36px;
+}
+
+h3{
+    margin-bottom:15px;
+    color:#ffffff;
+}
+
+/* INPUTS */
+
+.form-container input,
+.form-container textarea{
+    width:100%;
+    padding:14px;
+    margin-bottom:15px;
+    border:none;
+    border-radius:12px;
+    background:rgba(255,255,255,0.08);
+    color:white;
+    outline:none;
+    font-size:15px;
+}
+
+.form-container textarea{
+    height:120px;
+    resize:none;
+}
+
+.form-container input::placeholder,
+.form-container textarea::placeholder{
+    color:#cccccc;
+}
+
+/* BUTTON */
+
+button{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    background:#19e6b3;
+    color:#021024;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#13c79b;
+}
+
+/* LINE */
+
+hr{
+    margin:30px 0;
+    border:1px solid rgba(255,255,255,0.1);
+}
+
+/* REVIEWS */
+
+.review-item{
+    background:rgba(255,255,255,0.05);
+    padding:15px;
+    border-radius:12px;
+    margin-bottom:15px;
+    border:1px solid rgba(255,255,255,0.08);
+}
+
+.review-item b{
+    color:#19e6b3;
+    font-size:18px;
+}
+
+.review-item p{
+    margin-top:8px;
+    color:#d1d5db;
+    line-height:1.5;
+}

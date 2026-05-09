@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Medical Online Store</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Customer Reviews</h1>
+
+    <div class="form-container">
+
+        <h3>Add Review</h3>
+
+        <input type="text"
+               id="name"
+               placeholder="Enter Your Name">
+
+        <input type="number"
+               id="rating"
+               placeholder="Rating 1 - 5"
+               min="1"
+               max="5">
+
+        <textarea id="comment"
+                  placeholder="Write Your Comment"></textarea>
+
+        <button onclick="addReview()">
+            Submit Review
+        </button>
+
+    </div>
+
+    <hr>
+
+    <div id="reviews-list">
+
+        <h3>Recent Reviews</h3>
+
+        <div id="list-container">
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>
