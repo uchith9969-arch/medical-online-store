@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +25,12 @@ public class OrderService {
     @Autowired
     private OrderItemRepository orderItemRepository;
 
+    //Finding order or throwing checked exception
+    private Order findOrderById(Long id) throws OrderNotFoundException {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException("Order not found with ID: " + id));
+    }
+
     // Map Order entity -> OrderResponseDTO
     private OrderResponseDTO toResponseDTO(Order order) {
         return new OrderResponseDTO(
@@ -37,8 +42,8 @@ public class OrderService {
         );
     }
 
-    // Create order (with optional items)
-    public OrderResponseDTO createOrder(OrderRequestDTO requestDTO) {
+    // Creating order (with optional items)
+    public OrderResponseDTO createOrder(OrderRequestDTO requestDTO) throws OrderNotFoundException {
         Order order = new Order();
         order.setUserId(requestDTO.getUserId());
         order.setStatus(OrderStatus.PENDING);
@@ -60,7 +65,7 @@ public class OrderService {
             recalculateOrderTotal(savedOrder);
         }
 
-        return toResponseDTO(orderRepository.findById(savedOrder.getId()).get());
+        return toResponseDTO(findOrderById(savedOrder.getId()));
     }
 
     // Get all orders
@@ -72,10 +77,8 @@ public class OrderService {
     }
 
     // Get order by ID
-    public OrderResponseDTO getOrderById(Long id) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + id));
-        return toResponseDTO(order);
+    public OrderResponseDTO getOrderById(Long id) throws OrderNotFoundException {
+        return toResponseDTO(findOrderById(id));
     }
 
     // Get orders by user ID
@@ -103,17 +106,15 @@ public class OrderService {
     }
 
     // Update order status
-    public OrderResponseDTO updateOrderStatus(Long id, OrderStatus status) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new OrderNotFoundException("Order not found with ID: " + id));
+    public OrderResponseDTO updateOrderStatus(Long id, OrderStatus status) throws OrderNotFoundException {
+        Order order = findOrderById(id);
         order.setStatus(status);
         return toResponseDTO(orderRepository.save(order));
     }
 
-    // Cancel order
-    public OrderResponseDTO cancelOrder(Long id) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new OrderNotFoundException("Order not found with ID: " + id));
+    // Cancelling order
+    public OrderResponseDTO cancelOrder(Long id) throws OrderNotFoundException {
+        Order order = findOrderById(id);
 
         if (order.getStatus() == OrderStatus.DELIVERED) {
             throw new RuntimeException("Delivered orders cannot be cancelled");
@@ -126,10 +127,9 @@ public class OrderService {
         return toResponseDTO(orderRepository.save(order));
     }
 
-    // Delete order
-    public void deleteOrder(Long id) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new OrderNotFoundException("Order not found with ID: " + id));
+    // Deleting order
+    public void deleteOrder(Long id) throws OrderNotFoundException {
+        Order order = findOrderById(id);
         orderRepository.delete(order);
     }
 

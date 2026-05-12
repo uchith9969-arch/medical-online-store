@@ -2,54 +2,61 @@ package com.example.medical_online_store.controller;
 
 import com.example.medical_online_store.dto.OrderItemRequestDTO;
 import com.example.medical_online_store.dto.OrderItemResponseDTO;
+import com.example.medical_online_store.exception.OrderNotFoundException;
 import com.example.medical_online_store.service.OrderItemService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/orders")
-@CrossOrigin
+@CrossOrigin(origins = "*") // Restricting the frontend URL in production (e.g. "http://localhost:3000")
 public class OrderItemController {
 
     @Autowired
     private OrderItemService orderItemService;
 
-    // POST
+    // Add item to an order
     @PostMapping("/{orderId}/items")
-    public ResponseEntity<OrderItemResponseDTO> addItem(
+    @ResponseStatus(HttpStatus.CREATED)
+    public OrderItemResponseDTO addItem(
             @PathVariable Long orderId,
-            @Valid @RequestBody OrderItemRequestDTO dto) {
-        return ResponseEntity.ok(orderItemService.addItemToOrder(orderId, dto));
+            @Valid @RequestBody OrderItemRequestDTO requestDTO) throws OrderNotFoundException {
+        return orderItemService.addItemToOrder(orderId, requestDTO);
     }
 
-    // GET 
+    // Get all items for an order
     @GetMapping("/{orderId}/items")
-    public ResponseEntity<List<OrderItemResponseDTO>> getItemsByOrder(@PathVariable Long orderId) {
-        return ResponseEntity.ok(orderItemService.getItemsByOrderId(orderId));
+    public List<OrderItemResponseDTO> getItemsByOrder(@PathVariable Long orderId) throws OrderNotFoundException {
+        return orderItemService.getItemsByOrder(orderId);
     }
 
-    // GET Medicine
+    // Get all order items by medicine
     @GetMapping("/items/medicine/{medicineId}")
-    public ResponseEntity<List<OrderItemResponseDTO>> getItemsByMedicine(@PathVariable Long medicineId) {
-        return ResponseEntity.ok(orderItemService.getItemsByMedicineId(medicineId));
+    public List<OrderItemResponseDTO> getItemsByMedicine(@PathVariable Long medicineId) {
+        return orderItemService.getItemsByMedicine(medicineId);
     }
 
-    // PUT iitems,quantity
+    // Update quantity of an order item
     @PutMapping("/items/{itemId}/quantity")
-    public ResponseEntity<OrderItemResponseDTO> updateQuantity(
+    public OrderItemResponseDTO updateQuantity(
             @PathVariable Long itemId,
-            @RequestParam int quantity) {
-        return ResponseEntity.ok(orderItemService.updateQuantity(itemId, quantity));
+            @RequestBody Map<String, Integer> body) {
+        Integer newQuantity = body.get("quantity");
+        return orderItemService.updateItemQuantity(itemId, newQuantity);
     }
 
-    // DELETE items
+    // Remove an item from an order
     @DeleteMapping("/items/{itemId}")
-    public ResponseEntity<Void> removeItem(@PathVariable Long itemId) {
-        orderItemService.removeItem(itemId);
-        return ResponseEntity.noContent().build();
+    public Map<String, String> removeItem(@PathVariable Long itemId) {
+        orderItemService.removeItemFromOrder(itemId);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Order item removed successfully");
+        return response;
     }
 }

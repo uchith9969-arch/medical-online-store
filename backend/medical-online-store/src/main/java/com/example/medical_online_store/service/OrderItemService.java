@@ -5,6 +5,7 @@ import com.example.medical_online_store.dto.OrderItemResponseDTO;
 import com.example.medical_online_store.exception.OrderNotFoundException;
 import com.example.medical_online_store.model.Order;
 import com.example.medical_online_store.model.OrderItem;
+import com.example.medical_online_store.model.OrderStatus;
 import com.example.medical_online_store.repository.OrderItemRepository;
 import com.example.medical_online_store.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,80 +23,108 @@ public class OrderItemService {
     @Autowired
     private OrderRepository orderRepository;
 
-    // Mapping OrderItem entity -> OrderItemResponseDTO
-    private OrderItemResponseDTO tResponseDTO(OrderItem item) {
+    // Helper: find order or throw checked exception
+    private Order findOrderById(Long id) throws OrderNotFoundException {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException("Order not found with ID: " + id));
+    }
+
+    // Helper: find order item or throw runtime exception
+    private OrderItem findOrderItemById(Long id) {
+        return orderItemRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order item not found with ID: " + id));
+    }
+
+    // Map OrderItem entity -> OrderItemResponseDTO
+    private OrderItemResponseDTO toResponseDTO(OrderItem item) {
         return new OrderItemResponseDTO(
-            item.getId(),
-            item.getOrder().getId(),
-            item.getMedicineId(),
-            item.getQuantity(),
-            item.getUnitPrice(),
-            item.getTotalPrice()
+                item.getId(),
+                item.getOrder().getId(),
+                item.getMedicineId(),
+                item.getQuantity(),
+                item.getUnitPrice(),
+                item.getTotalPrice()
         );
     }
 
-    // Adding item to an existing order
-    public OrderItemResponseDTO addItemToOrder(Long orderId, OrderItemRequestDTO requestDTO)
-    throws OrderNotFoundException {
-        Order order = orderRepository.findById(orderId)
-            .orElseThrow(() -> new OrderNotFoundException("Order not found with ID:" + orderId));
+    // Add item to an existing order
+    public OrderItemResponseDTO addItemToOrder(Long orderId, OrderItemRequestDTO requestDTO) throws OrderNotFoundException {
+        Order order = findOrderById(orderId);
 
-        OrderItem item = new OrderItem();
-        item.setOrder(order);
-        item.setMedicineId(requestDTO.getMedicineId());
-        item.setQuantity(requestDTO.getQuantity());
-        item.setUnitPrice(requestDTO.getUnitPrice());
+        // Prevent adding items to a cancelled or delivered order
+        if (order.getStatus() == OrderStatus.CANCELLED || order.getStatus() == OrderStatus.DELIVERED) {
+            throw new RuntimeException("Cannot add items to a " + order.getStatus() + " order");
+        }
+
+        OrderItem item = new OrderItem(
+                order,
+                requestDTO.getMedicineId(),
+                requestDTO.getQuantity(),
+                requestDTO.getUnitPrice()
+        );
 
         OrderItem saved = orderItemRepository.save(item);
         recalculateOrderTotal(order);
 
-        return tResponseDTO(saved);
+        return toResponseDTO(saved);
     }
 
     // Get all items for an order
-    public List<OrderItemResponseDTO> getItemsByOrderId(Long orderId) {
+    public List<OrderItemResponseDTO> getItemsByOrder(Long orderId) throws OrderNotFoundException {
+        findOrderById(orderId); // validates order exists
         return orderItemRepository.findByOrderId(orderId)
-            .stream()
-            .map(this::tResponseDTO)
-            .collect(Collectors.toList());
+                .stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
-    // Get items by medicineId
-    public List<OrderItemResponseDTO> getItemsByMedicineId(Long medicineId) {
+    // Get items by medicine ID
+    public List<OrderItemResponseDTO> getItemsByMedicine(Long medicineId) {
         return orderItemRepository.findByMedicineId(medicineId)
-            .stream()
-            .map(this::tResponseDTO)
-            .collect(Collectors.toList());
+                .stream()
+                .map(this::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
-    // Update item quantity
-    public OrderItemResponseDTO updateQuantity(Long itemId, int newQuantity) {
-        OrderItem item = orderItemRepository.findById(itemId)
-            .orElseThrow(() -> new RuntimeException("OrderItem not found with ID: " + itemId));
+    // Update quantity of an order item
+    public OrderItemResponseDTO updateItemQuantity(Long itemId, Integer newQuantity) {
+        if (newQuantity == null || newQuantity < 1) {
+            throw new RuntimeException("Quantity must be at least 1");
+        }
+
+        OrderItem item = findOrderItemById(itemId);
+        Order order = item.getOrder();
+
+        if (order.getStatus() == OrderStatus.CANCELLED || order.getStatus() == OrderStatus.DELIVERED) {
+            throw new RuntimeException("Cannot update items in a " + order.getStatus() + " order");
+        }
 
         item.setQuantity(newQuantity);
         OrderItem updated = orderItemRepository.save(item);
-        recalculateOrderTotal(item.getOrder());
+        recalculateOrderTotal(order);
 
-        return tResponseDTO(updated);
+        return toResponseDTO(updated);
     }
 
-    // Remove item from order
-    public void removeItem(Long itemId) {
-        OrderItem item = orderItemRepository.findById(itemId)
-            .orElseThrow(() -> new RuntimeException("OrderItem not found with ID: " + itemId));
-
+    // Remove an item from an order
+    public void removeItemFromOrder(Long itemId) {
+        OrderItem item = findOrderItemById(itemId);
         Order order = item.getOrder();
-        orderItemRepository.deleteById(itemId);
+
+        if (order.getStatus() == OrderStatus.CANCELLED || order.getStatus() == OrderStatus.DELIVERED) {
+            throw new RuntimeException("Cannot remove items from a " + order.getStatus() + " order");
+        }
+
+        orderItemRepository.delete(item);
         recalculateOrderTotal(order);
     }
 
-    // Recalculate and save the order's total amount
+    // Recalculate and update the total amount of an order
     private void recalculateOrderTotal(Order order) {
         List<OrderItem> items = orderItemRepository.findByOrderId(order.getId());
-        double total = items.stream()
-            .mapToDouble(OrderItem::getTotalPrice)
-            .sum();
+        Double total = items.stream()
+                .mapToDouble(OrderItem::getTotalPrice)
+                .sum();
         order.setTotalAmount(total);
         orderRepository.save(order);
     }
