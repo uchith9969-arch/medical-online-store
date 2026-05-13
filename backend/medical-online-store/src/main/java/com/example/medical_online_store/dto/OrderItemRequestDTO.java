@@ -2,7 +2,7 @@ package com.example.medical_online_store.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+
 
 public class OrderItemRequestDTO {
 
@@ -10,12 +10,10 @@ public class OrderItemRequestDTO {
     private Long medicineId;
 
     @NotNull(message = "Quantity is required")
-    @Min(value = 1, message = "Quantity must be at least 1")
+    @Min(value = 1, message = "Quantity must be atleast 1")  // unitPrice removed — price is fetched automatically from Medicine
     private Integer quantity;
 
-    @NotNull(message = "Unit price is required")
-    @Positive(message = "Unit price must be greater than 0")
-    private Double unitPrice;
+    
 
     // Getters
     public Long getMedicineId() {
@@ -26,9 +24,7 @@ public class OrderItemRequestDTO {
         return quantity;
     }
 
-    public Double getUnitPrice() {
-        return unitPrice;
-    }
+    
 
     // Setters
     public void setMedicineId(Long medicineId) {
@@ -39,7 +35,6 @@ public class OrderItemRequestDTO {
         this.quantity = quantity;
     }
 
-    public void setUnitPrice(Double unitPrice) {
-        this.unitPrice = unitPrice;
-    }
+  
+    
 }

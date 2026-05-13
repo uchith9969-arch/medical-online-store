@@ -23,13 +23,13 @@ public class OrderItemService {
     @Autowired
     private OrderRepository orderRepository;
 
-    // Helper: find order or throw checked exception
+    // Find order or throw checked exception
     private Order findOrderById(Long id) throws OrderNotFoundException {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException("Order not found with ID: " + id));
     }
 
-    // Helper: find order item or throw runtime exception
+    // Find order item or throw runtime exception
     private OrderItem findOrderItemById(Long id) {
         return orderItemRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order item not found with ID: " + id));
@@ -43,12 +43,12 @@ public class OrderItemService {
                 item.getMedicineId(),
                 item.getQuantity(),
                 item.getUnitPrice(),
-                item.getTotalPrice()
-        );
+                item.getTotalPrice());
     }
 
     // Add item to an existing order
-    public OrderItemResponseDTO addItemToOrder(Long orderId, OrderItemRequestDTO requestDTO) throws OrderNotFoundException {
+    public OrderItemResponseDTO addItemToOrder(Long orderId, OrderItemRequestDTO requestDTO)
+            throws OrderNotFoundException {
         Order order = findOrderById(orderId);
 
         // Prevent adding items to a cancelled or delivered order
@@ -56,11 +56,21 @@ public class OrderItemService {
             throw new RuntimeException("Cannot add items to a " + order.getStatus() + " order");
         }
 
+        // Fetch medicine and get price automatically
+        Medicine medicine = medicineService.findMedicineById(requestDTO.getMedicineId());
+
+        // Check medicine is in stock
+        if (medicine.getStockQuantity() < requestDTO.getQuantity()) {
+
+            throw new RuntimeException("Insufficient stock for medicine: " + medicine.getName() + ". Available: "
+                    + medicine.getStockQuantity + ", Requested: " + requestDTO.getQuantity());
+        }
+
         OrderItem item = new OrderItem(
                 order,
-                requestDTO.getMedicineId(),
+                medicine.getId(),
                 requestDTO.getQuantity(),
-                requestDTO.getUnitPrice()
+                medicine.getPrice() // price fetched from Medicine, not from client
         );
 
         OrderItem saved = orderItemRepository.save(item);
@@ -87,7 +97,7 @@ public class OrderItemService {
     }
 
     // Update quantity of an order item
-    public OrderItemResponseDTO updateItemQuantity(Long itemId, Integer newQuantity) {
+    public OrderItemResponseDTO updateItemQuantity(Long itemId, Integer newQuantity) throws MedicineNotFoundException {
         if (newQuantity == null || newQuantity < 1) {
             throw new RuntimeException("Quantity must be at least 1");
         }
@@ -97,6 +107,13 @@ public class OrderItemService {
 
         if (order.getStatus() == OrderStatus.CANCELLED || order.getStatus() == OrderStatus.DELIVERED) {
             throw new RuntimeException("Cannot update items in a " + order.getStatus() + " order");
+        }
+
+        // Check medicine stock for new quantity
+        Medicine medicine = medicineService.findMedicineById(item.getMedicineId());
+        if (medicine.getStockQuantity() < newQuantity) {
+            throw new RuntimeException("Insufficient stock for medicine: " + medicine.getName() + ". Available: "
+                    + medicine.getStockQuantity() + ", Requested: " + newQuantity);
         }
 
         item.setQuantity(newQuantity);

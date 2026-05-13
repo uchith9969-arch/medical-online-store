@@ -76,6 +76,20 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
+    // Handle Medicine not found
+    @ExceptionHandler(MedicineNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleMedicineNotFound(MedicineNotFoundException ex) {
+ 
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now());
+        response.put("status", HttpStatus.NOT_FOUND.value());
+        response.put("error", "Not Found");
+        response.put("message", ex.getMessage());
+ 
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+
     // Handle general runtime exceptions
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException ex) {
