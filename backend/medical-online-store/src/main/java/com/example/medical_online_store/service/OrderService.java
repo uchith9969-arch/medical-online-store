@@ -3,10 +3,9 @@ package com.example.medical_online_store.service;
 import com.example.medical_online_store.dto.OrderItemRequestDTO;
 import com.example.medical_online_store.dto.OrderRequestDTO;
 import com.example.medical_online_store.dto.OrderResponseDTO;
+import com.example.medical_online_store.exception.MedicineNotFoundException;
 import com.example.medical_online_store.exception.OrderNotFoundException;
-import com.example.medical_online_store.model.Order;
-import com.example.medical_online_store.model.OrderItem;
-import com.example.medical_online_store.model.OrderStatus;
+import com.example.medical_online_store.model.*;
 import com.example.medical_online_store.repository.OrderItemRepository;
 import com.example.medical_online_store.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,10 @@ public class OrderService {
     @Autowired
     private OrderItemRepository orderItemRepository;
 
-    //Finding order or throwing checked exception
+    @Autowired
+    private MedicineService medicineService;
+
+    // Find order or throw checked exception
     private Order findOrderById(Long id) throws OrderNotFoundException {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new OrderNotFoundException("Order not found with ID: " + id));
@@ -42,8 +44,8 @@ public class OrderService {
         );
     }
 
-    // Creating order (with optional items)
-    public OrderResponseDTO createOrder(OrderRequestDTO requestDTO) throws OrderNotFoundException {
+    // Create order (with optional items)
+    public OrderResponseDTO createOrder(OrderRequestDTO requestDTO) throws OrderNotFoundException, MedicineNotFoundException {
         Order order = new Order();
         order.setUserId(requestDTO.getUserId());
         order.setStatus(OrderStatus.PENDING);
@@ -51,14 +53,25 @@ public class OrderService {
 
         Order savedOrder = orderRepository.save(order);
 
-        // If items are provided, save them and calculate total
+        // If items are provided, fetch price from medicine and save items
         if (requestDTO.getItems() != null && !requestDTO.getItems().isEmpty()) {
             for (OrderItemRequestDTO itemDTO : requestDTO.getItems()) {
+
+                // Fetch medicine to get the correct price
+                Medicine medicine = medicineService.findMedicineById(itemDTO.getMedicineId());
+
+                // Check stock before adding
+                if (medicine.getStockQuantity() < itemDTO.getQuantity()) {
+                    throw new RuntimeException("Insufficient stock for medicine: " + medicine.getName()
+                            + ". Available: " + medicine.getStockQuantity()
+                            + ", Requested: " + itemDTO.getQuantity());
+                }
+
                 OrderItem item = new OrderItem(
                         savedOrder,
-                        itemDTO.getMedicineId(),
+                        medicine.getId(),
                         itemDTO.getQuantity(),
-                        itemDTO.getUnitPrice()
+                        medicine.getPrice() // price fetched from Medicine, not from client
                 );
                 orderItemRepository.save(item);
             }
@@ -112,7 +125,7 @@ public class OrderService {
         return toResponseDTO(orderRepository.save(order));
     }
 
-    // Cancelling order
+    // Cancel order
     public OrderResponseDTO cancelOrder(Long id) throws OrderNotFoundException {
         Order order = findOrderById(id);
 
@@ -127,7 +140,7 @@ public class OrderService {
         return toResponseDTO(orderRepository.save(order));
     }
 
-    // Deleting order
+    // Delete order
     public void deleteOrder(Long id) throws OrderNotFoundException {
         Order order = findOrderById(id);
         orderRepository.delete(order);

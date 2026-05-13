@@ -2,6 +2,7 @@ package com.example.medical_online_store.controller;
 
 import com.example.medical_online_store.dto.OrderRequestDTO;
 import com.example.medical_online_store.dto.OrderResponseDTO;
+import com.example.medical_online_store.exception.MedicineNotFoundException;
 import com.example.medical_online_store.exception.OrderNotFoundException;
 import com.example.medical_online_store.model.OrderStatus;
 import com.example.medical_online_store.service.OrderService;
@@ -20,16 +21,17 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/orders")
-@CrossOrigin(origins = "*") // Restricting the frontend URL in production (e.g. "http://localhost:3000" )
+@CrossOrigin(origins = "*") // Restricting the frontend URL in production (e.g. "http://localhost:3000")
 public class OrderController {
 
     @Autowired
     private OrderService orderService;
 
-    // Creating an order
+    // Create order
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderResponseDTO createOrder(@Valid @RequestBody OrderRequestDTO requestDTO) throws OrderNotFoundException {
+    public OrderResponseDTO createOrder(@Valid @RequestBody OrderRequestDTO requestDTO)
+            throws OrderNotFoundException, MedicineNotFoundException {
         return orderService.createOrder(requestDTO);
     }
 
@@ -39,7 +41,7 @@ public class OrderController {
         return orderService.getAllOrders();
     }
 
-    // Get an order by ID
+    // Get order by ID
     @GetMapping("/{id}")
     public OrderResponseDTO getOrderById(@PathVariable Long id) throws OrderNotFoundException {
         return orderService.getOrderById(id);
@@ -88,7 +90,8 @@ public class OrderController {
 
     // Update order status
     @PutMapping("/{id}/status")
-    public OrderResponseDTO updateStatus(@PathVariable Long id, @RequestBody Map<String, String> body) throws OrderNotFoundException {
+    public OrderResponseDTO updateStatus(@PathVariable Long id, @RequestBody Map<String, String> body)
+            throws OrderNotFoundException {
         if (body == null || !body.containsKey("status")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status is required");
         }
@@ -102,13 +105,13 @@ public class OrderController {
         return orderService.updateOrderStatus(id, status);
     }
 
-    // Cancelling order
+    // Cancel order
     @PutMapping("/{id}/cancel")
     public OrderResponseDTO cancelOrder(@PathVariable Long id) throws OrderNotFoundException {
         return orderService.cancelOrder(id);
     }
 
-    // Deleting order
+    // Delete order
     @DeleteMapping("/{id}")
     public Map<String, String> deleteOrder(@PathVariable Long id) throws OrderNotFoundException {
         orderService.deleteOrder(id);

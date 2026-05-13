@@ -2,6 +2,7 @@ package com.example.medical_online_store.controller;
 
 import com.example.medical_online_store.dto.OrderItemRequestDTO;
 import com.example.medical_online_store.dto.OrderItemResponseDTO;
+import com.example.medical_online_store.exception.MedicineNotFoundException;
 import com.example.medical_online_store.exception.OrderNotFoundException;
 import com.example.medical_online_store.service.OrderItemService;
 import jakarta.validation.Valid;
@@ -26,7 +27,7 @@ public class OrderItemController {
     @ResponseStatus(HttpStatus.CREATED)
     public OrderItemResponseDTO addItem(
             @PathVariable Long orderId,
-            @Valid @RequestBody OrderItemRequestDTO requestDTO) throws OrderNotFoundException {
+            @Valid @RequestBody OrderItemRequestDTO requestDTO) throws OrderNotFoundException, MedicineNotFoundException {
         return orderItemService.addItemToOrder(orderId, requestDTO);
     }
 
@@ -46,7 +47,7 @@ public class OrderItemController {
     @PutMapping("/items/{itemId}/quantity")
     public OrderItemResponseDTO updateQuantity(
             @PathVariable Long itemId,
-            @RequestBody Map<String, Integer> body) {
+            @RequestBody Map<String, Integer> body) throws MedicineNotFoundException {
         Integer newQuantity = body.get("quantity");
         return orderItemService.updateItemQuantity(itemId, newQuantity);
     }
