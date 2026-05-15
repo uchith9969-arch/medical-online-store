@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MediCore – Create Account</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="main/css/signup.css">
+</head>
+<body>
+
+<div class="bg-gradient"></div>
+<div class="grid-lines"></div>
+<div class="bg-orb orb1"></div>
+<div class="bg-orb orb2"></div>
+<div class="particles" id="particles"></div>
+
+<div class="page">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+        </svg>
+      </div>
+      <span class="brand-name">MediCore</span>
+    </div>
+
+    <div class="hero-tag">
+      <div class="dot"></div>
+      Join 50,000+ users today
+    </div>
+
+    <h1 class="hero-title">
+      Start your<br><span>medical journey</span><br>with us
+    </h1>
+
+    <p class="hero-desc">
+      Manage medicines, prescriptions, suppliers and customers from one powerful platform built for healthcare professionals.
+    </p>
+
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="feature-text">
+          <div class="feature-title">Bank-Grade Security</div>
+          <div class="feature-sub">256-bit encryption, HIPAA & GDPR compliant data handling</div>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="feature-text">
+          <div class="feature-title">Real-time Inventory</div>
+          <div class="feature-sub">Live stock tracking with expiry alerts and auto-reorder</div>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="feature-text">
+          <div class="feature-title">Multi-Role Access</div>
+          <div class="feature-sub">Custom permissions for Admins, Pharmacists, Suppliers & Customers</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="auth-card">
+
+      <!-- FORM VIEW -->
+      <div id="form-view">
+
+        <!-- Progress Steps -->
+        <div class="progress-row">
+          <div class="step active" id="step1">
+            <div class="step-num" id="sn1">1</div>
+            <span>Personal</span>
+          </div>
+          <div class="step-connector" id="conn1"></div>
+          <div class="step" id="step2">
+            <div class="step-num" id="sn2">2</div>
+            <span>Access</span>
+          </div>
+          <div class="step-connector" id="conn2"></div>
+          <div class="step" id="step3">
+            <div class="step-num" id="sn3">3</div>
+            <span>Confirm</span>
+          </div>
+        </div>
+
+        <div class="card-label">Get started free</div>
+        <div class="card-title">Create your account</div>
+        <div class="card-subtitle">Fill in your details to join MediCore</div>
+
+        <div class="form" id="main-form">
+
+          <!-- Row: First + Last Name -->
+          <div class="row-2">
+            <div class="field">
+              <label class="field-label">First Name</label>
+              <div class="input-wrap">
+                <span class="input-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                </span>
+                <input class="input-field" type="text" id="su-first" placeholder="Kamal" autocomplete="given-name"/>
+              </div>
+              <div class="field-err" id="err-first">First name is required</div>
+            </div>
+            <div class="field">
+              <label class="field-label">Last Name</label>
+              <div class="input-wrap">
+                <span class="input-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                </span>
+                <input class="input-field" type="text" id="su-last" placeholder="Perera" autocomplete="family-name"/>
+              </div>
+              <div class="field-err" id="err-last">Last name is required</div>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="field">
+            <label class="field-label">Email address</label>
+            <div class="input-wrap">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+              </span>
+              <input class="input-field" type="email" id="su-email" placeholder="you@medicore.lk" autocomplete="email"/>
+            </div>
+            <div class="field-err" id="err-email">Enter a valid email address</div>
+          </div>
+
+          <!-- Phone Number -->
+          <div class="field">
+            <label class="field-label">Phone Number</label>
+            <div class="input-wrap">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+              </span>
+              <input class="input-field" type="tel" id="su-phone" placeholder="+94 7X XXX XXXX" autocomplete="tel" style="padding-left:42px;"/>
+            </div>
+            <div class="field-err" id="err-phone">Enter a valid phone number</div>
+          </div>
+
+          <!-- Role + Pills -->
+          <div class="field">
+            <label class="field-label">Select your role</label>
+            <div class="input-wrap">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 3H8a2 2 0 00-2 2v2h12V5a2 2 0 00-2-2z"/></svg>
+              </span>
+              <select class="input-field select-field" id="su-role" onchange="syncRolePill(this.value)">
+                <option value="">-- Choose a role --</option>
+                <option value="Admin">Admin</option>
+                <option value="Pharmacist">Pharmacist</option>
+                <option value="Supplier">Supplier</option>
+                <option value="Customer">Customer</option>
+              </select>
+              <span class="select-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </span>
+            </div>
+            <div class="role-pills">
+              <span class="role-pill" data-role="Admin" onclick="selectRole('Admin')">
+                <span class="role-pill-dot"></span>Admin
+              </span>
+              <span class="role-pill" data-role="Pharmacist" onclick="selectRole('Pharmacist')">
+                <span class="role-pill-dot"></span>Pharmacist
+              </span>
+              <span class="role-pill" data-role="Supplier" onclick="selectRole('Supplier')">
+                <span class="role-pill-dot"></span>Supplier
+              </span>
+              <span class="role-pill" data-role="Customer" onclick="selectRole('Customer')">
+                <span class="role-pill-dot"></span>Customer
+              </span>
+            </div>
+            <div class="field-err" id="err-role">Please select a role</div>
+          </div>
+
+          <!-- Password -->
+          <div class="field">
+            <label class="field-label">Password</label>
+            <div class="input-wrap">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              </span>
+              <input class="input-field" type="password" id="su-pw" placeholder="Create a strong password" oninput="evalStrength(this.value)"/>
+              <button class="pw-toggle" onclick="togglePw('su-pw', this)" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <div class="pw-strength" id="pw-strength">
+              <div class="strength-bars">
+                <div class="sbar" id="sb1"></div>
+                <div class="sbar" id="sb2"></div>
+                <div class="sbar" id="sb3"></div>
+                <div class="sbar" id="sb4"></div>
+              </div>
+              <div class="strength-info">
+                <span class="strength-label" id="strength-label" style="color:#ccc;"></span>
+                <span class="strength-tips" id="strength-tips"></span>
+              </div>
+            </div>
+            <div class="field-err" id="err-pw">Password must be at least 8 characters</div>
+          </div>
+
+          <!-- Terms -->
+          <div class="terms">
+            <input type="checkbox" id="agree"/>
+            <label for="agree">
+              I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a> of MediCore
+            </label>
+          </div>
+
+          <!-- Submit -->
+          <button class="submit-btn" id="signup-btn" onclick="handleSignup()">
+            <div class="btn-spinner"></div>
+            <span class="btn-text">Create Account →</span>
+          </button>
+
+          <!-- Switch -->
+          <div class="switch-link">
+            Already have an account? <a href="login.html">Sign in →</a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- SUCCESS VIEW -->
+      <div class="success-screen" id="success-view">
+        <div class="success-ring">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+        </div>
+        <div class="success-title">Account Created!</div>
+        <div class="success-sub" id="success-sub">Welcome to MediCore.<br>Your account is ready.</div>
+        <div class="patient-badge" id="patient-badge"></div>
+        <div class="role-badge-display" id="role-badge-display"></div>
+        <button class="submit-btn" style="margin-top:8px; max-width:220px;" onclick="window.location.href='login.html'">
+          <span class="btn-text">Go to Sign In →</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ─── Particles ─── */
+  (function() {
+    var c = document.getElementById('particles');
+    for (var i = 0; i < 20; i++) {
+      var p = document.createElement('div');
+      p.className = 'particle';
+      var s = Math.random() * 3 + 1.5;
+      p.style.cssText = 'width:'+s+'px;height:'+s+'px;left:'+(Math.random()*100)+'%;animation-duration:'+(Math.random()*18+12)+'s;animation-delay:'+(Math.random()*-20)+'s;opacity:'+(Math.random()*0.35+0.1);
+      c.appendChild(p);
+    }
+  })();
+
+  /* ─── Role Pill Select ─── */
+  function selectRole(role) {
+    document.getElementById('su-role').value = role;
+    document.querySelectorAll('.role-pill').forEach(function(p) {
+      p.classList.toggle('selected', p.dataset.role === role);
+    });
+    document.getElementById('err-role').style.display = 'none';
+    updateProgress();
+  }
+
+  function syncRolePill(role) {
+    document.querySelectorAll('.role-pill').forEach(function(p) {
+      p.classList.toggle('selected', p.dataset.role === role);
+    });
+    updateProgress();
+  }
+
+  /* ─── Progress Steps ─── */
+  function updateProgress() {
+    var first = document.getElementById('su-first').value;
+    var last  = document.getElementById('su-last').value;
+    var email = document.getElementById('su-email').value;
+    var role  = document.getElementById('su-role').value;
+    var pw    = document.getElementById('su-pw').value;
+
+    var s1done = first && last && email;
+    var s2done = role;
+    var s3done = pw && pw.length >= 8;
+
+    setStep(1, s1done, false);
+    setStep(2, s2done, !s1done);
+    setStep(3, s3done, !s2done);
+
+    if (s1done) document.getElementById('conn1').classList.add('active');
+    else document.getElementById('conn1').classList.remove('active');
+    if (s2done) document.getElementById('conn2').classList.add('active');
+    else document.getElementById('conn2').classList.remove('active');
+  }
+
+  function setStep(n, done, inactive) {
+    var step = document.getElementById('step'+n);
+    var sn   = document.getElementById('sn'+n);
+    step.classList.remove('active','done');
+    if (done) {
+      step.classList.add('done');
+      sn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="12" height="12"><path d="M20 6L9 17l-5-5"/></svg>';
+    } else if (!inactive) {
+      step.classList.add('active');
+      sn.textContent = n;
+    } else {
+      sn.textContent = n;
+    }
+  }
+
+  ['su-first','su-last','su-email','su-pw'].forEach(function(id) {
+    document.getElementById(id).addEventListener('input', updateProgress);
+  });
+
+  /* ─── Password Strength ─── */
+  function evalStrength(val) {
+    var el = document.getElementById('pw-strength');
+    if (!val) { el.classList.remove('visible'); return; }
+    el.classList.add('visible');
+
+    var score = 0;
+    if (val.length >= 8) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+
+    var palettes = [
+      { color: '#F87171', label: 'Weak',      tip: 'Add uppercase & numbers' },
+      { color: '#FB923C', label: 'Fair',      tip: 'Add special characters' },
+      { color: '#FBBF24', label: 'Good',      tip: 'Almost there!' },
+      { color: '#10B981', label: 'Strong',    tip: 'Great password!' },
+    ];
+    var p = palettes[Math.max(score-1, 0)];
+
+    for (var i = 1; i <= 4; i++) {
+      document.getElementById('sb'+i).style.background = i <= score ? p.color : 'rgba(255,255,255,0.08)';
+    }
+    document.getElementById('strength-label').textContent = p.label;
+    document.getElementById('strength-label').style.color = p.color;
+    document.getElementById('strength-tips').textContent = p.tip;
+  }
+
+  /* ─── PW Toggle ─── */
+  function togglePw(id, btn) {
+    var inp = document.getElementById(id);
+    var visible = inp.type === 'text';
+    inp.type = visible ? 'password' : 'text';
+    btn.innerHTML = visible
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+  }
+
+  /* ─── Field Error Helpers ─── */
+  function fieldErr(id, errId, show) {
+    var inp = document.getElementById(id);
+    var err = document.getElementById(errId);
+    if (show) {
+      inp.classList.add('error');
+      err.style.display = 'block';
+    } else {
+      inp.classList.remove('error');
+      err.style.display = 'none';
+    }
+    return !show;
+  }
+
+  /* ─── Signup Handler ─── */
+  function handleSignup() {
+    var first = document.getElementById('su-first').value.trim();
+    var last  = document.getElementById('su-last').value.trim();
+    var email = document.getElementById('su-email').value.trim();
+    var phone = document.getElementById('su-phone').value.trim();
+    var role  = document.getElementById('su-role').value;
+    var pw    = document.getElementById('su-pw').value;
+    var agree = document.getElementById('agree').checked;
+    var valid = true;
+
+    valid = fieldErr('su-first','err-first', !first) && valid;
+    valid = fieldErr('su-last', 'err-last',  !last)  && valid;
+    valid = fieldErr('su-email','err-email',  !email || !/\S+@\S+\.\S+/.test(email)) && valid;
+    valid = fieldErr('su-phone','err-phone',  !phone || !/^[+\d][\d\s\-]{6,}$/.test(phone)) && valid;
+    valid = fieldErr('su-role', 'err-role',  !role)  && valid;
+    valid = fieldErr('su-pw',   'err-pw',    !pw || pw.length < 8) && valid;
+
+    if (!agree) {
+      alert('Please accept the Terms of Service to continue.');
+      return;
+    }
+
+    if (!valid) return;
+
+    var btn = document.getElementById('signup-btn');
+    btn.classList.add('loading');
+
+    setTimeout(function() {
+      btn.classList.remove('loading');
+      document.getElementById('form-view').style.display = 'none';
+      document.getElementById('success-view').classList.add('show');
+
+      document.getElementById('success-sub').innerHTML =
+        'Welcome, <strong>' + first + ' ' + last + '</strong>!<br>Your MediCore account is ready to use.';
+
+      var uid = 'MC-' + Math.random().toString(36).substring(2,8).toUpperCase();
+      document.getElementById('patient-badge').textContent = 'User ID: ' + uid;
+
+      var roleColors = {
+        Admin:      { bg: 'rgba(99,102,241,0.12)',  color: '#A5B4FC', border: 'rgba(99,102,241,0.25)' },
+        Pharmacist: { bg: 'rgba(16,185,129,0.12)',  color: '#6EE7B7', border: 'rgba(16,185,129,0.25)' },
+        Supplier:   { bg: 'rgba(251,191,36,0.12)',  color: '#FCD34D', border: 'rgba(251,191,36,0.25)' },
+        Customer:   { bg: 'rgba(59,130,246,0.12)',  color: '#93C5FD', border: 'rgba(59,130,246,0.25)' },
+      };
+      var rc = roleColors[role] || roleColors.Customer;
+      var rb = document.getElementById('role-badge-display');
+      rb.style.cssText = 'background:'+rc.bg+';color:'+rc.color+';border:1px solid '+rc.border+';display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;font-size:12px;font-weight:500;';
+      rb.innerHTML = '<span style="width:7px;height:7px;border-radius:50%;background:'+rc.color+';display:inline-block;"></span> ' + role;
+    }, 2200);
+  }
+
+  /* Clear field errors on input */
+  ['su-first','su-last','su-email','su-phone','su-pw'].forEach(function(id) {
+    document.getElementById(id).addEventListener('input', function() {
+      this.classList.remove('error');
+      var errId = 'err-' + id.replace('su-','');
+      var errEl = document.getElementById(errId);
+      if (errEl) errEl.style.display = 'none';
+    });
+  });
+</script>
+</body>
+</html>

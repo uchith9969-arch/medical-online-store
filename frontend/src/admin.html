@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MedAdmin — User Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<link rel="stylesheet" href="main/css/admin.css">
+</head>
+<body>
+
+<!-- Mobile Overlay -->
+<div class="mobile-overlay" id="mobileOverlay" onclick="closeSidebar()"></div>
+
+<!-- Mobile Toggle -->
+<button class="mobile-toggle" onclick="toggleSidebar()">
+  <i class="fas fa-bars"></i>
+</button>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon"><i class="fas fa-plus"></i></div>
+    <div class="logo-text">Med<span>Admin</span></div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="sidebar-section">Main</div>
+
+    <a class="nav-item" href="#">
+      <i class="fas fa-chart-pie"></i>
+      Dashboard
+    </a>
+    <a class="nav-item active" href="#">
+      <i class="fas fa-users"></i>
+      User Management
+      <span class="nav-badge">12</span>
+    </a>
+    <a class="nav-item" href="#">
+      <i class="fas fa-pills"></i>
+      Medicine Management
+    </a>
+    <a class="nav-item" href="#">
+      <i class="fas fa-shopping-bag"></i>
+      Orders
+      <span class="nav-badge">3</span>
+    </a>
+
+    <div class="sidebar-section">Reports</div>
+
+    <a class="nav-item" href="#">
+      <i class="fas fa-chart-line"></i>
+      Analytics
+    </a>
+    <a class="nav-item" href="#">
+      <i class="fas fa-file-invoice"></i>
+      Invoices
+    </a>
+    <a class="nav-item" href="#">
+      <i class="fas fa-cog"></i>
+      Settings
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a class="nav-item logout" href="#">
+      <i class="fas fa-right-from-bracket"></i>
+      Logout
+    </a>
+  </div>
+</aside>
+
+<script>
+  function runCode() {
+    alert("Run button clicked!");
+  }
+</script>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-breadcrumb">
+        <i class="fas fa-house" style="font-size:0.65rem"></i>
+        Dashboard &rsaquo; <span>User Management</span>
+      </div>
+      <div class="topbar-title">User Management</div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-icon-btn">
+        <i class="fas fa-bell"></i>
+        <div class="notif-dot"></div>
+      </div>
+      <div class="topbar-icon-btn">
+        <i class="fas fa-magnifying-glass"></i>
+      </div>
+      <div class="admin-pill">
+        <div class="admin-avatar">SA</div>
+        <div class="admin-info">
+          <div class="admin-name">Super Admin</div>
+          <div class="admin-role">Administrator</div>
+        </div>
+        <i class="fas fa-chevron-down" style="font-size:0.65rem;color:var(--text-light);margin-left:2px"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="fas fa-users"></i></div>
+        <div>
+          <div class="stat-label">Total Users</div>
+          <div class="stat-value" id="statTotal">12</div>
+          <div class="stat-delta">↑ 8% this month</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue"><i class="fas fa-user-shield"></i></div>
+        <div>
+          <div class="stat-label">Admins</div>
+          <div class="stat-value" id="statAdmin">2</div>
+          <div class="stat-delta">No change</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon amber"><i class="fas fa-user-check"></i></div>
+        <div>
+          <div class="stat-label">Active Users</div>
+          <div class="stat-value" id="statActive">9</div>
+          <div class="stat-delta">↑ 2 new today</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon red"><i class="fas fa-user-xmark"></i></div>
+        <div>
+          <div class="stat-label">Inactive</div>
+          <div class="stat-value" id="statInactive">3</div>
+          <div class="stat-delta neg">↑ 1 this week</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="table-card">
+      <div class="table-header">
+        <div class="table-title">Registered Users</div>
+        <div class="search-wrap">
+          <i class="fas fa-search"></i>
+          <input type="text" class="search-input" id="searchInput" placeholder="Search users…" oninput="filterTable()"/>
+        </div>
+        <select class="filter-select" id="roleFilter" onchange="filterTable()">
+          <option value="">All Roles</option>
+          <option value="Admin">Admin</option>
+          <option value="Pharmacist">Pharmacist</option>
+          <option value="Supplier">Supplier</option>
+          <option value="Customer">Customer</option>
+        </select>
+        <select class="filter-select" id="statusFilter" onchange="filterTable()">
+          <option value="">All Status</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+        <button class="btn-add" onclick="showToast('Feature coming soon!','info')">
+          <i class="fas fa-plus"></i> Add User
+        </button>
+      </div>
+
+      <div class="table-wrap">
+        <table id="userTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>First Name <span class="sort-icon">⇅</span></th>
+              <th>Last Name</th>
+              <th>Email <span class="sort-icon">⇅</span></th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Joined</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="userTbody"></tbody>
+        </table>
+        <div class="empty-state" id="emptyState">
+          <i class="fas fa-users-slash"></i>
+          <h3>No users found</h3>
+          <p>Try adjusting your search or filter criteria.</p>
+        </div>
+      </div>
+
+      <div class="table-footer">
+        <div class="page-info" id="pageInfo">Showing 1–10 of 12 users</div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- Delete Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <div class="modal-icon"><i class="fas fa-trash-can"></i></div>
+    <h2>Delete User?</h2>
+    <p>You're about to permanently delete <span class="modal-user" id="deleteUserName"></span>. This action cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-confirm-delete" onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ── DATA ──
+const avatarColors = ['#1a9e6e','#2563eb','#f59e0b','#6366f1','#ec4899','#0891b2','#7c3aed','#d97706'];
+
+let users = [
+  { id: 1, first: 'Asel',     last: 'Nurlanovna', email: 'asel.n@medstore.kz',      role: 'Admin',      status: 'Active',   joined: '2023-01-15' },
+  { id: 2, first: 'David',    last: 'Osei',       email: 'david.o@medstore.kz',     role: 'Admin',      status: 'Active',   joined: '2023-02-08' },
+  { id: 3, first: 'Priya',    last: 'Sharma',     email: 'priya.s@medstore.kz',     role: 'Pharmacist', status: 'Active',   joined: '2023-03-22' },
+  { id: 4, first: 'Lucas',    last: 'Müller',     email: 'lucas.m@medstore.kz',     role: 'Pharmacist', status: 'Active',   joined: '2023-04-11' },
+  { id: 5, first: 'Fatima',   last: 'Al-Rashid',  email: 'fatima.r@medstore.kz',    role: 'Pharmacist', status: 'Inactive', joined: '2023-05-03' },
+  { id: 6, first: 'Kenji',    last: 'Yamamoto',   email: 'kenji.y@supplyco.jp',     role: 'Supplier',   status: 'Active',   joined: '2023-06-17' },
+  { id: 7, first: 'Elena',    last: 'Popescu',    email: 'elena.p@pharmaeu.ro',     role: 'Supplier',   status: 'Active',   joined: '2023-07-29' },
+  { id: 8, first: 'Marcus',   last: 'Johnson',    email: 'marcus.j@gmail.com',      role: 'Customer',   status: 'Active',   joined: '2023-08-14' },
+  { id: 9, first: 'Amara',    last: 'Diallo',     email: 'amara.d@outlook.com',     role: 'Customer',   status: 'Active',   joined: '2023-09-05' },
+  { id: 10,first: 'Sofia',    last: 'Reyes',      email: 'sofia.r@yahoo.com',       role: 'Customer',   status: 'Inactive', joined: '2023-10-20' },
+  { id: 11,first: 'Ivan',     last: 'Petrov',     email: 'ivan.p@mail.ru',          role: 'Customer',   status: 'Active',   joined: '2023-11-13' },
+  { id: 12,first: 'Nour',     last: 'Hassan',     email: 'nour.h@hotmail.com',      role: 'Customer',   status: 'Inactive', joined: '2023-12-07' },
+];
+
+const ROWS_PER_PAGE = 8;
+let currentPage   = 1;
+let deleteTarget  = null;
+let filteredUsers = [...users];
+
+function getInitials(first, last) { return (first[0] + last[0]).toUpperCase(); }
+function getColor(id) { return avatarColors[id % avatarColors.length]; }
+
+function roleBadge(role) {
+  const map = { Admin: 'badge-admin', Pharmacist: 'badge-pharmacist', Supplier: 'badge-supplier', Customer: 'badge-customer' };
+  return `<span class="badge ${map[role] || ''}">${role}</span>`;
+}
+
+function statusPill(status) {
+  return `<span class="status-pill ${status === 'Active' ? 'status-active' : 'status-inactive'}">${status}</span>`;
+}
+
+function highlight(text, query) {
+  if (!query) return text;
+  const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  return text.replace(re, '<mark>$1</mark>');
+}
+
+function formatDate(d) {
+  const dt = new Date(d);
+  return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function renderTable() {
+  const tbody = document.getElementById('userTbody');
+  const empty = document.getElementById('emptyState');
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+
+  const start = (currentPage - 1) * ROWS_PER_PAGE;
+  const slice = filteredUsers.slice(start, start + ROWS_PER_PAGE);
+
+  if (filteredUsers.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'flex';
+  } else {
+    empty.style.display = 'none';
+    tbody.innerHTML = slice.map((u, i) => `
+      <tr id="row-${u.id}">
+        <td style="color:var(--text-light);font-size:0.78rem">${start + i + 1}</td>
+        <td>
+          <div class="user-cell">
+            <div class="user-initial" style="background:${getColor(u.id)}">${getInitials(u.first, u.last)}</div>
+            <div>
+              <div class="user-name">${highlight(u.first, q)}</div>
+              <div class="user-id">#USR-${String(u.id).padStart(4,'0')}</div>
+            </div>
+          </div>
+        </td>
+        <td>${highlight(u.last, q)}</td>
+        <td class="email-cell">${highlight(u.email, q)}</td>
+        <td>${roleBadge(u.role)}</td>
+        <td>${statusPill(u.status)}</td>
+        <td style="color:var(--text-muted);font-size:0.8rem">${formatDate(u.joined)}</td>
+        <td>
+          <div class="actions">
+            <button class="btn-icon edit" title="Edit" onclick="showToast('Edit user coming soon!','info')">
+              <i class="fas fa-pen"></i>
+            </button>
+            <button class="btn-icon delete" title="Delete" onclick="openDeleteModal(${u.id},'${u.first} ${u.last}')">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  updateStats();
+  renderPagination();
+  updatePageInfo();
+}
+
+function updateStats() {
+  const total    = users.length;
+  const admins   = users.filter(u => u.role === 'Admin').length;
+  const active   = users.filter(u => u.status === 'Active').length;
+  const inactive = users.filter(u => u.status === 'Inactive').length;
+  document.getElementById('statTotal').textContent   = total;
+  document.getElementById('statAdmin').textContent   = admins;
+  document.getElementById('statActive').textContent  = active;
+  document.getElementById('statInactive').textContent = inactive;
+
+  // Update badge
+  document.querySelectorAll('.nav-badge')[0].textContent = total;
+}
+
+function filterTable() {
+  const q      = document.getElementById('searchInput').value.trim().toLowerCase();
+  const role   = document.getElementById('roleFilter').value;
+  const status = document.getElementById('statusFilter').value;
+
+  filteredUsers = users.filter(u => {
+    const matchQ = !q || [u.first, u.last, u.email, u.role].some(v => v.toLowerCase().includes(q));
+    const matchR = !role   || u.role   === role;
+    const matchS = !status || u.status === status;
+    return matchQ && matchR && matchS;
+  });
+
+  currentPage = 1;
+  renderTable();
+}
+
+function renderPagination() {
+  const total = Math.ceil(filteredUsers.length / ROWS_PER_PAGE);
+  const pg = document.getElementById('pagination');
+  if (total <= 1) { pg.innerHTML = ''; return; }
+
+  let html = `<button class="page-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+                <i class="fas fa-chevron-left" style="font-size:0.65rem"></i>
+              </button>`;
+
+  for (let i = 1; i <= total; i++) {
+    if (total > 6 && i > 2 && i < total - 1 && Math.abs(i - currentPage) > 1) {
+      if (i === 3 || i === total - 2) html += `<button class="page-btn" disabled>…</button>`;
+      continue;
+    }
+    html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goPage(${i})">${i}</button>`;
+  }
+
+  html += `<button class="page-btn" onclick="goPage(${currentPage + 1})" ${currentPage === total ? 'disabled' : ''}>
+             <i class="fas fa-chevron-right" style="font-size:0.65rem"></i>
+           </button>`;
+
+  pg.innerHTML = html;
+}
+
+function updatePageInfo() {
+  const start = (currentPage - 1) * ROWS_PER_PAGE + 1;
+  const end   = Math.min(currentPage * ROWS_PER_PAGE, filteredUsers.length);
+  document.getElementById('pageInfo').textContent =
+    filteredUsers.length === 0 ? 'No users' : `Showing ${start}–${end} of ${filteredUsers.length} users`;
+}
+
+function goPage(p) {
+  const total = Math.ceil(filteredUsers.length / ROWS_PER_PAGE);
+  if (p < 1 || p > total) return;
+  currentPage = p;
+  renderTable();
+}
+
+// Delete Modal
+function openDeleteModal(id, name) {
+  deleteTarget = id;
+  document.getElementById('deleteUserName').textContent = name;
+  document.getElementById('deleteModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('deleteModal').classList.remove('open');
+  deleteTarget = null;
+}
+
+function confirmDelete() {
+  if (!deleteTarget) return;
+  const row = document.getElementById(`row-${deleteTarget}`);
+  if (row) {
+    row.classList.add('deleting');
+    setTimeout(() => {
+      users = users.filter(u => u.id !== deleteTarget);
+      filterTable();
+      closeModal();
+      showToast('User deleted successfully', 'success');
+    }, 350);
+  } else {
+    users = users.filter(u => u.id !== deleteTarget);
+    filterTable();
+    closeModal();
+    showToast('User deleted successfully', 'success');
+  }
+}
+
+// Click outside modal to close
+document.getElementById('deleteModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// Toast
+function showToast(msg, type = 'success') {
+  const icon = { success: 'circle-check', error: 'circle-xmark', info: 'circle-info' }[type] || 'circle-info';
+  const tc = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<i class="fas fa-${icon}"></i> ${msg}`;
+  tc.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity 0.4s'; setTimeout(() => t.remove(), 400); }, 2800);
+}
+
+// Sidebar mobile
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('mobileOverlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('mobileOverlay').classList.remove('open');
+}
+
+// Init
+renderTable();
+</script>
+</body>
+</html>
