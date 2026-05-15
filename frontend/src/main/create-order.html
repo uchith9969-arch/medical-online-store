@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Order - MediCore</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+    <a href="orders.html" class="logo">
+        <div class="logo-icon">⊞</div>
+        Medi<span>Core</span>
+    </a>
+</nav>
+
+<div class="container-sm">
+
+    <a href="orders.html" class="back-link">← Back to Orders</a>
+
+    <div class="card">
+        <h1 class="page-title" style="margin-bottom:28px">Create New Order</h1>
+
+        <!-- Alerts -->
+        <div class="alert alert-success" id="successAlert"></div>
+        <div class="alert alert-error"   id="errorAlert"></div>
+
+        <!-- User ID -->
+        <div class="form-group">
+            <label>User ID</label>
+            <input type="number" id="userId" placeholder="Enter user ID" min="1" />
+        </div>
+
+        <!-- Order Type -->
+        <div class="form-group">
+            <label>Order Type</label>
+            <select id="orderType" onchange="toggleFeeNote()">
+                <option value="REGULAR">Regular Order (Standard delivery — 5 days)</option>
+                <option value="URGENT">Urgent Order (Express delivery — 1 day)</option>
+            </select>
+            <div class="fee-note" id="feeNote">
+                ⚡ Urgent orders include an additional LKR 500.00 urgency fee.
+            </div>
+        </div>
+
+        <!-- Order Items -->
+        <div class="form-group">
+            <label>Order Items</label>
+            <div id="itemsContainer">
+                <div class="item-row">
+                    <input type="number" class="medicineId" placeholder="Medicine ID" min="1" />
+                    <input type="number" class="quantity qty" placeholder="Qty" min="1" value="1" />
+                </div>
+            </div>
+            <button type="button" class="btn-add-item" onclick="addItemRow()">+ Add Another Medicine</button>
+        </div>
+
+        <!-- Actions -->
+        <div style="display:flex; gap:12px; margin-top:28px">
+            <a href="orders.html" class="btn btn-secondary" style="flex:1; text-align:center; padding:13px">Cancel</a>
+            <button class="btn btn-primary" onclick="submitOrder()" style="flex:2; padding:13px">
+                Create Order →
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="../js/create-order.js"></script>
+</body>
+</html>

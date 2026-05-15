@@ -1,8 +1,8 @@
 package com.example.medical_online_store.dto;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
 public class OrderRequestDTO {
@@ -10,30 +10,20 @@ public class OrderRequestDTO {
     @NotNull(message = "User ID is required")
     private Long userId;
 
+    // REGULAR or URGENT — defaults to REGULAR if not provided
+    private String orderType = "REGULAR";
+
     //Client can pass items when creating the order
     @Valid
     private List<OrderItemRequestDTO> items;
 
+    // Getters
+    public Long getUserId() { return userId; }
+    public String getOrderType() { return orderType; }
+    public List<OrderItemRequestDTO> getItems() { return items; }
 
     // Setters
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public void setItems(List<OrderItemRequestDTO> items) {
-        this.items = items;
-    }
-
-
-    // Getters
-    public Long getUserId() {
-        return userId;
-    }
-
-    public List<OrderItemRequestDTO> getItems() {
-        return items;
-    }
-
-
-
+    public void setUserId(Long userId) { this.userId = userId; }
+    public void setOrderType(String orderType) { this.orderType = orderType; }
+    public void setItems(List<OrderItemRequestDTO> items) { this.items = items; }
 }

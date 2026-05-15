@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Detail - MediCore</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+    <a href="orders.html" class="logo">
+        <div class="logo-icon">⊞</div>
+        Medi<span>Core</span>
+    </a>
+</nav>
+
+<div class="container">
+
+    <a href="orders.html" class="back-link">← Back to Orders</a>
+
+    <!-- Alerts -->
+    <div class="alert alert-success" id="successAlert"></div>
+    <div class="alert alert-error"   id="errorAlert"></div>
+
+    <!-- Loading -->
+    <div class="loading" id="loadingMsg">Loading order...</div>
+
+    <!-- Order Info Card -->
+    <div class="card" id="orderCard" style="display:none">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px">
+            <div>
+                <h1 class="page-title">
+                    Order <span style="color:#00c896" id="orderId"></span>
+                </h1>
+                <p style="color:#64748b; font-size:14px; margin-top:6px" id="orderDate"></p>
+            </div>
+            <div style="display:flex; gap:10px; align-items:center">
+                <span class="badge" id="orderTypeBadge"></span>
+                <span class="badge" id="statusBadge"></span>
+            </div>
+        </div>
+
+        <!-- Info Grid -->
+        <div class="info-grid">
+            <div class="info-box">
+                <p class="info-label">User ID</p>
+                <p class="info-value" id="infoUserId"></p>
+            </div>
+            <div class="info-box">
+                <p class="info-label">Total Amount</p>
+                <p class="info-value" id="totalAmount"></p>
+            </div>
+            <div class="info-box">
+                <p class="info-label">Priority</p>
+                <p class="info-value" id="priority"></p>
+            </div>
+        </div>
+
+        <!-- OOP Summary -->
+        <div class="summary-box" id="orderSummary"></div>
+
+        <!-- Update Status -->
+        <div id="statusUpdateSection" style="display:flex; align-items:center; gap:12px; margin-top:20px">
+            <select id="statusSelect" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 14px;color:#fff;font-size:14px;outline:none;font-family:'DM Sans',sans-serif">
+                <option value="PENDING">PENDING</option>
+                <option value="PAID">PAID</option>
+                <option value="DELIVERED">DELIVERED</option>
+                <option value="CANCELLED">CANCELLED</option>
+            </select>
+            <button class="btn btn-primary" onclick="updateStatus()">Update Status →</button>
+        </div>
+    </div>
+
+    <!-- Order Items Card -->
+    <div class="card" id="itemsCard" style="display:none">
+        <h2 style="font-family:'Syne',sans-serif; font-size:18px; font-weight:700; margin-bottom:20px">
+            Order Items
+        </h2>
+        <div id="itemsContent"></div>
+    </div>
+
+</div>
+
+<script src="../js/order-detail.js"></script>
+</body>
+</html>

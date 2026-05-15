@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders - MediCore</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+    <a href="orders.html" class="logo">
+        <div class="logo-icon">⊞</div>
+        Medi<span>Core</span>
+    </a>
+    <div class="nav-right">
+        <a href="create-order.html" class="btn btn-primary">+ New Order</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Order Management</h1>
+            <p class="page-subtitle" id="orderCount">Loading orders...</p>
+        </div>
+    </div>
+
+    <!-- Alerts -->
+    <div class="alert alert-success" id="successAlert"></div>
+    <div class="alert alert-error"   id="errorAlert"></div>
+
+    <!-- Filters -->
+    <div class="filters">
+        <input type="text" id="searchUserId" placeholder="Search by User ID..." oninput="filterOrders()" />
+        <select id="filterStatus" onchange="filterOrders()">
+            <option value="">All Statuses</option>
+            <option value="PENDING">PENDING</option>
+            <option value="PAID">PAID</option>
+            <option value="CANCELLED">CANCELLED</option>
+            <option value="DELIVERED">DELIVERED</option>
+        </select>
+        <select id="filterType" onchange="filterOrders()">
+            <option value="">All Types</option>
+            <option value="REGULAR">REGULAR</option>
+            <option value="URGENT">URGENT</option>
+        </select>
+    </div>
+
+    <!-- Table -->
+    <div id="loadingMsg" class="loading">Loading orders...</div>
+
+    <div class="table-wrap" id="tableWrap" style="display:none">
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Type</th>
+                    <th>User ID</th>
+                    <th>Total Amount</th>
+                    <th>Status</th>
+                    <th>Order Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="ordersTableBody"></tbody>
+        </table>
+    </div>
+
+    <div class="empty" id="emptyMsg" style="display:none">No orders found.</div>
+
+</div>
+
+<script src="../js/orders.js"></script>
+</body>
+</html>

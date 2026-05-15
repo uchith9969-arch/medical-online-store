@@ -27,40 +27,49 @@ public class OrderService {
     @Autowired
     private MedicineService medicineService;
 
-    // Find order or throw checked exception
+    // Helper: find order or throw checked exception
     private Order findOrderById(Long id) throws OrderNotFoundException {
-        return orderRepository.findById(id)
-                .orElseThrow(() -> new OrderNotFoundException("Order not found with ID: " + id));
+        return orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException("Order not found with ID: " + id));
     }
 
     // Map Order entity -> OrderResponseDTO
+    // Uses polymorphic methods: getOrderType(), getEntitySummary(), calculatePriority()
     private OrderResponseDTO toResponseDTO(Order order) {
         return new OrderResponseDTO(
                 order.getId(),
                 order.getUserId(),
                 order.getTotalAmount(),
                 order.getStatus(),
-                order.getOrderDate()
+                order.getOrderDate(),
+                order.getOrderType(),           // POLYMORPHISM
+                order.getEntitySummary(),        // POLYMORPHISM
+                order.calculatePriority()        // POLYMORPHISM
         );
     }
 
-    // Create order (with optional items)
-    public OrderResponseDTO createOrder(OrderRequestDTO requestDTO) throws OrderNotFoundException, MedicineNotFoundException {
-        Order order = new Order();
-        order.setUserId(requestDTO.getUserId());
-        order.setStatus(OrderStatus.PENDING);
-        order.setTotalAmount(0.0);
+    // Create order — creates RegularOrder or UrgentOrder based on orderType
+    public OrderResponseDTO createOrder(OrderRequestDTO requestDTO)
+            throws OrderNotFoundException, MedicineNotFoundException {
 
+        // Decide which subclass to instantiate
+        Order order;
+        String orderType = requestDTO.getOrderType();
+
+        if ("URGENT".equalsIgnoreCase(orderType)) {
+            order = new UrgentOrder(requestDTO.getUserId(), 500.0);
+        } else {
+            order = new RegularOrder(requestDTO.getUserId());
+        }
+
+        order.setTotalAmount(0.0);
         Order savedOrder = orderRepository.save(order);
 
-        // If items are provided, fetch price from medicine and save items
+        // Save items and calculate total
         if (requestDTO.getItems() != null && !requestDTO.getItems().isEmpty()) {
             for (OrderItemRequestDTO itemDTO : requestDTO.getItems()) {
 
-                // Fetch medicine to get the correct price
                 Medicine medicine = medicineService.findMedicineById(itemDTO.getMedicineId());
 
-                // Check stock before adding
                 if (medicine.getStockQuantity() < itemDTO.getQuantity()) {
                     throw new RuntimeException("Insufficient stock for medicine: " + medicine.getName()
                             + ". Available: " + medicine.getStockQuantity()
@@ -71,11 +80,18 @@ public class OrderService {
                         savedOrder,
                         medicine.getId(),
                         itemDTO.getQuantity(),
-                        medicine.getPrice() // price fetched from Medicine, not from client
+                        medicine.getPrice()
                 );
                 orderItemRepository.save(item);
             }
             recalculateOrderTotal(savedOrder);
+        }
+
+        // If urgent, add urgency fee to total
+        if (savedOrder instanceof UrgentOrder) {
+            UrgentOrder urgentOrder = (UrgentOrder) savedOrder;
+            savedOrder.setTotalAmount(savedOrder.getTotalAmount() + urgentOrder.getUrgencyFee());
+            orderRepository.save(savedOrder);
         }
 
         return toResponseDTO(findOrderById(savedOrder.getId()));
